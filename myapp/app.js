@@ -1,8 +1,8 @@
-// app.js
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const inventoryRoutes = require('./routes/inventory'); // Importa las rutas de inventario
+const axios = require('axios'); // Necesitarás instalar axios con npm install axios
 
 const app = express();
 const port = 3000;
@@ -25,6 +25,18 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // Usa las rutas de inventario
 app.use('/inventory', inventoryRoutes);
+
+// Ruta para generar un usuario aleatorio
+app.get('/randomuser', (req, res) => {
+  axios.get('https://randomuser.me/api/')
+    .then(response => {
+      res.json(response.data);
+    })
+    .catch(error => {
+      console.error('Error al obtener el usuario aleatorio:', error.message);
+      res.status(500).send('Error al obtener el usuario aleatorio');
+    });
+});
 
 // Ruta para la página principal
 app.get('/', (req, res) => {
@@ -55,11 +67,40 @@ app.get('/', (req, res) => {
           box-shadow: 0 5px #666;
           transform: translateY(4px);
         }
+
+        .randomUserButton {
+          display: inline-block;
+          padding: 10px 20px;
+          font-size: 20px;
+          cursor: pointer;
+          text-align: center;
+          text-decoration: none;
+          outline: none;
+          color: #fff;
+          background-color: skyblue;
+          border: none;
+          border-radius: 15px;
+          box-shadow: 0 9px #999;
+          margin: 10px;
+        }
+
+        .randomUserButton:hover {background-color: deepskyblue}
+
+        .randomUserButton:active {
+          background-color: deepskyblue;
+          box-shadow: 0 5px #666;
+          transform: translateY(4px);
+        }
       </style>
-      <button class="button" onclick="window.location.href='/inventory/listar'">Listar</button>
-      <button class="button" onclick="window.location.href='/inventory/agregar'">Agregar</button>
-      <button class="button" onclick="window.location.href='/inventory/modificar'">Modificar</button>
-      <button class="button" onclick="window.location.href='/inventory/eliminar'">Eliminar</button>
+      <div>
+        <button class="button" onclick="window.location.href='/inventory/listar'">Listar</button>
+        <button class="button" onclick="window.location.href='/inventory/agregar'">Agregar</button>
+        <button class="button" onclick="window.location.href='/inventory/modificar'">Modificar</button>
+        <button class="button" onclick="window.location.href='/inventory/eliminar'">Eliminar</button>
+      </div>
+      <div style="margin-top: 20px;">
+        <button class="randomUserButton" onclick="window.location.href='/randomuser'">RANDOM USER GENERATOR</button>
+      </div>
     </div>
   `);
 });
