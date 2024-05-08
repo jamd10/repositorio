@@ -1,3 +1,6 @@
+// Primero, requiere y configura dotenv
+require('dotenv').config();
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
@@ -5,10 +8,10 @@ const inventoryRoutes = require('./routes/inventory'); // Importa las rutas de i
 const axios = require('axios'); // Necesitarás instalar axios con npm install axios
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000; // Usa la variable de entorno PORT si está disponible
 
 // Conexión a la base de datos MongoDB en la nube
-mongoose.connect('mongodb+srv://jamd10:1234@vanguardia.swwqyho.mongodb.net/inventario', {
+mongoose.connect(process.env.MONGODB_URI, { // Usa la variable de entorno MONGODB_URI
   useNewUrlParser: true,
   useUnifiedTopology: true
 })
@@ -28,7 +31,7 @@ app.use('/inventory', inventoryRoutes);
 
 // Ruta para generar un usuario aleatorio
 app.get('/randomuser', (req, res) => {
-  axios.get('https://randomuser.me/api/')
+  axios.get(process.env.RANDOM_USER_API_URL) // Usa la variable de entorno RANDOM_USER_API_URL
     .then(response => {
       res.json(response.data);
     })
